@@ -32,12 +32,10 @@ FONT_SEMI = os.path.join(FONTS_DIR, "Inter-SemiBold.ttf")
 
 os.makedirs(PASSPORT_OUT, exist_ok=True)
 
-# ---------- APP / BOT ----------
 app = Flask(__name__)
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ---------- DATA ----------
 def load_data():
     if not os.path.exists(DATA_FILE):
         return []
@@ -48,7 +46,6 @@ def save_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
-# ---------- PASSPORT IMAGE ----------
 def generate_passport(entry):
     img = Image.new("RGB", (1000, 600), "#f3efe6")
     draw = ImageDraw.Draw(img)
@@ -93,7 +90,7 @@ def generate_passport(entry):
     img.save(out_path)
     return out_path
 
-# ---------- DISCORD VIEW ----------
+
 class PassportView(discord.ui.View):
     def __init__(self, app_id):
         super().__init__(timeout=None)
@@ -134,7 +131,7 @@ class PassportView(discord.ui.View):
     async def deny(self, interaction: discord.Interaction, button: discord.ui.Button):
         await self.finalize(interaction, "Denied")
 
-# ---------- WEB UI (FULL HTML + CSS) ----------
+
 HTML = """
 <!DOCTYPE html>
 <html>
@@ -310,3 +307,4 @@ async def on_ready():
 if __name__ == "__main__":
     threading.Thread(target=run_flask, daemon=True).start()
     bot.run(BOT_TOKEN)
+
